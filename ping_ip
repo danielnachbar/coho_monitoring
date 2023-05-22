@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if [ $1x = x ]
+then
+  echo ERROR usage: $0 ip_address
+fi
+
+
+dirname=/home/pi/mm/ping_data
+
+the_date=`date -u +%s`
+filename_prefix=`date -u --date=@$the_date +%Y_%m_%d_T_%H_%M_%S`
+filename_suffix=`echo $1 | sed 's/\./_/g'`
+filename=$filename_prefix'_IP_'$filename_suffix
+
+fullpath=$dirname/$filename
+
+date_string=`date -u --date=@$the_date`
+
+echo -n '"'$the_date'","'$date_string'","'$filename_prefix'","'$1'",' > $fullpath
+
+/bin/ping -c 60 -q $1 | \
+  grep received | \
+  sed 's/,/\n/g' |\
+  grep received | \
+  sed s/received// |\
+  tr -d ' '   >> $fullpath 2>&1
+  

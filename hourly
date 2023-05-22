@@ -1,0 +1,3 @@
+#/bin/sh
+
+curl `/home/pi/mm/bin/hourly_curl_args.py`
